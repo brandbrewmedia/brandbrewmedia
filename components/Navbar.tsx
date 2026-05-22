@@ -60,13 +60,6 @@ export default function Navbar() {
 
         {/* Right side actions */}
         <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
-          <Link
-            href="/admin"
-            className="font-montserrat text-xs text-gray-500 hover:text-brand-red
-                       transition-colors uppercase tracking-widest whitespace-nowrap"
-          >
-            Admin
-          </Link>
           <a
             href="#contact"
             className="btn-primary text-xs px-5 py-2.5 whitespace-nowrap"
