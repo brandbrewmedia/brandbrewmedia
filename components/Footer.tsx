@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Footer() {
   return (
@@ -6,15 +7,15 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div className="md:col-span-2">
-            {/* Logo in footer */}
+            {/* Logo in footer — inverted to show on dark background */}
             <div className="mb-5">
-              <div className="font-bebas text-3xl text-white tracking-widest">BRAND BREW</div>
-              <div className="relative inline-block">
-                <div className="font-montserrat text-[10px] font-bold text-brand-red tracking-[0.45em] uppercase">
-                  WE BREW BRANDS
-                </div>
-                <div className="h-[2px] bg-brand-red w-full mt-0.5" />
-              </div>
+              <Image
+                src="/logo.jpg"
+                alt="Brand Brew Media — We Brew Brands"
+                width={180}
+                height={68}
+                className="h-14 w-auto object-contain brightness-0 invert"
+              />
             </div>
             <p className="font-montserrat text-sm text-gray-400 leading-relaxed max-w-sm">
               We brew brands that resonate, inspire, and convert. Your growth partner for digital marketing,
