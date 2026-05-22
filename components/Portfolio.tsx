@@ -1,6 +1,6 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, X } from 'lucide-react'
 
 type PortfolioItem = {
   id: number
@@ -8,8 +8,9 @@ type PortfolioItem = {
   category: string
   desc: string
   result: string
-  color: string
   tag: string
+  image: string        // URL — picsum for demo, replace with your real images
+  client: string
 }
 
 const PORTFOLIO: PortfolioItem[] = [
@@ -17,55 +18,61 @@ const PORTFOLIO: PortfolioItem[] = [
     id: 1,
     title: 'TechVista Rebrand',
     category: 'Branding',
+    tag: 'Branding',
+    client: 'TechVista Solutions',
     desc: 'Complete brand identity overhaul for a B2B SaaS company — logo, guidelines, website, and launch campaign.',
     result: '+240% brand recognition',
-    color: 'from-orange-900/40 to-brand-red/20',
-    tag: 'Branding',
+    image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80',
   },
   {
     id: 2,
     title: 'CloudNine Social Campaign',
     category: 'Social Media',
-    desc: 'Six-month integrated social media strategy across Instagram, Facebook and LinkedIn for a D2C fashion brand.',
-    result: '50K new followers, 3x ROAS',
-    color: 'from-purple-900/40 to-brand-red/10',
     tag: 'SMM',
+    client: 'CloudNine Retail',
+    desc: 'Six-month integrated social media strategy across Instagram, Facebook and LinkedIn for a D2C fashion brand.',
+    result: '50K new followers · 3x ROAS',
+    image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80',
   },
   {
     id: 3,
-    title: 'Spice Route SEO Domination',
+    title: 'Spice Route SEO',
     category: 'SEO',
+    tag: 'SEO',
+    client: 'Spice Route Foods',
     desc: 'Comprehensive SEO overhaul ranking 120+ keywords on page 1, driving 4x organic traffic in 6 months.',
     result: '400% organic traffic growth',
-    color: 'from-emerald-900/40 to-brand-red/10',
-    tag: 'SEO',
+    image: 'https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&q=80',
   },
   {
     id: 4,
     title: 'Stellar Homes PPC',
     category: 'Performance',
-    desc: 'Google & Meta ad campaigns for a real estate developer generating high-quality leads at record-low CPL.',
-    result: '₹12 CPL, 8x ROAS',
-    color: 'from-blue-900/40 to-brand-red/10',
     tag: 'PPC',
+    client: 'Stellar Homes',
+    desc: 'Google & Meta ad campaigns for a real estate developer generating high-quality leads at record-low CPL.',
+    result: '₹12 CPL · 8x ROAS',
+    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80',
   },
   {
     id: 5,
     title: 'FreshBite Brand Film',
     category: 'Video',
+    tag: 'Video',
+    client: 'FreshBite',
     desc: '3-minute brand film production for a healthy food brand — conceptualisation, shoot, and full post-production.',
     result: '2M views in 30 days',
-    color: 'from-yellow-900/40 to-brand-red/10',
-    tag: 'Video',
+    image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&q=80',
   },
   {
     id: 6,
     title: 'EduEdge Content Strategy',
     category: 'Content',
-    desc: 'Full content strategy, blog production, and thought leadership pieces positioning the brand as an industry authority.',
-    result: '180% increase in leads',
-    color: 'from-red-900/40 to-brand-red/20',
     tag: 'Content',
+    client: 'EduEdge',
+    desc: 'Full content strategy, blog production, and thought leadership pieces positioning the brand as an authority.',
+    result: '180% increase in leads',
+    image: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80',
   },
 ]
 
@@ -74,6 +81,7 @@ const CATEGORIES = ['All', 'Branding', 'Social Media', 'SEO', 'Performance', 'Vi
 function PortfolioCard({ item, idx }: { item: PortfolioItem; idx: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const [vis, setVis] = useState(false)
+  const [modal, setModal] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -85,45 +93,88 @@ function PortfolioCard({ item, idx }: { item: PortfolioItem; idx: number }) {
   }, [])
 
   return (
-    <div
-      ref={ref}
-      style={{ transitionDelay: `${idx * 80}ms` }}
-      className={`group relative overflow-hidden bg-brand-gray-dark border border-white/5
-                  hover:border-brand-red/30 transition-all duration-500 cursor-pointer
-                  ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-    >
-      {/* Gradient background */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-60 group-hover:opacity-100 transition-opacity duration-500`} />
-
-      <div className="relative z-10 p-8">
-        <div className="flex items-start justify-between mb-8">
-          <span className="font-bebas text-xs tracking-widest text-brand-red bg-brand-red/10 px-3 py-1">
+    <>
+      <div
+        ref={ref}
+        style={{ transitionDelay: `${idx * 80}ms` }}
+        onClick={() => setModal(true)}
+        className={`group relative overflow-hidden bg-brand-gray-dark border border-white/5
+                    hover:border-brand-red/40 transition-all duration-500 cursor-pointer
+                    ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+      >
+        {/* Image */}
+        <div className="relative h-56 overflow-hidden">
+          <img
+            src={item.image}
+            alt={item.title}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-brand-black/50 group-hover:bg-brand-black/30 transition-colors duration-500" />
+          {/* Tag */}
+          <span className="absolute top-4 left-4 font-bebas text-xs tracking-widest text-white bg-brand-red px-3 py-1">
             {item.tag}
           </span>
-          <ExternalLink
-            size={16}
-            className="text-white/0 group-hover:text-white/60 transition-colors duration-300"
-          />
+          {/* Expand icon */}
+          <div className="absolute top-4 right-4 w-8 h-8 bg-white/10 backdrop-blur-sm flex items-center justify-center
+                          opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <ExternalLink size={14} className="text-white" />
+          </div>
         </div>
 
-        {/* Number */}
-        <div className="font-bebas text-7xl text-white/5 group-hover:text-white/10 transition-all duration-500 leading-none mb-4 select-none">
-          {String(item.id).padStart(2, '0')}
-        </div>
-
-        <h3 className="font-bebas text-3xl text-white tracking-wide mb-3 group-hover:text-brand-red transition-colors duration-300">
-          {item.title}
-        </h3>
-        <p className="font-montserrat text-sm text-gray-400 leading-relaxed mb-6">{item.desc}</p>
-
-        <div className="flex items-center gap-2">
-          <span className="w-4 h-px bg-brand-red" />
-          <span className="font-montserrat text-xs font-semibold text-brand-red uppercase tracking-widest">
-            {item.result}
-          </span>
+        {/* Content */}
+        <div className="p-6">
+          <div className="font-montserrat text-xs text-gray-500 mb-1">{item.client}</div>
+          <h3 className="font-bebas text-2xl text-white tracking-wide mb-2 group-hover:text-brand-red transition-colors duration-300">
+            {item.title}
+          </h3>
+          <p className="font-montserrat text-sm text-gray-400 leading-relaxed line-clamp-2">{item.desc}</p>
+          <div className="flex items-center gap-2 mt-4">
+            <span className="w-4 h-px bg-brand-red" />
+            <span className="font-montserrat text-xs font-semibold text-brand-red uppercase tracking-widest">
+              {item.result}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Lightbox Modal */}
+      {modal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setModal(false)}
+        >
+          <div
+            className="bg-brand-gray-dark border border-white/10 max-w-2xl w-full overflow-hidden"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="relative h-72">
+              <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+              <button
+                onClick={() => setModal(false)}
+                className="absolute top-4 right-4 w-10 h-10 bg-brand-black/70 text-white flex items-center justify-center hover:bg-brand-red transition-colors"
+              >
+                <X size={18} />
+              </button>
+              <span className="absolute bottom-4 left-4 font-bebas text-xs tracking-widest text-white bg-brand-red px-3 py-1">
+                {item.tag}
+              </span>
+            </div>
+            <div className="p-8">
+              <div className="font-montserrat text-xs text-gray-500 uppercase tracking-widest mb-1">{item.client}</div>
+              <h3 className="font-bebas text-4xl text-white tracking-wide mb-4">{item.title}</h3>
+              <p className="font-montserrat text-sm text-gray-300 leading-relaxed mb-6">{item.desc}</p>
+              <div className="flex items-center gap-3 p-4 bg-brand-red/10 border border-brand-red/20">
+                <span className="w-6 h-px bg-brand-red flex-shrink-0" />
+                <span className="font-montserrat text-sm font-semibold text-brand-red uppercase tracking-widest">
+                  Result: {item.result}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
@@ -157,10 +208,9 @@ export default function Portfolio() {
               onClick={() => setActive(cat)}
               className={`font-montserrat text-xs font-semibold px-5 py-2 uppercase tracking-widest
                           transition-all duration-200 border
-                          ${
-                            active === cat
-                              ? 'bg-brand-red text-white border-brand-red'
-                              : 'text-gray-400 border-white/10 hover:border-brand-red hover:text-brand-red'
+                          ${active === cat
+                            ? 'bg-brand-red text-white border-brand-red'
+                            : 'text-gray-400 border-white/10 hover:border-brand-red hover:text-brand-red'
                           }`}
             >
               {cat}
@@ -173,6 +223,12 @@ export default function Portfolio() {
             <PortfolioCard key={item.id} item={item} idx={i} />
           ))}
         </div>
+
+        {/* How to replace images note — remove this in production */}
+        <p className="text-center font-montserrat text-xs text-gray-600 mt-12">
+          To use your own images, replace the image URLs in{' '}
+          <code className="text-brand-red">components/Portfolio.tsx</code>
+        </p>
       </div>
     </section>
   )
