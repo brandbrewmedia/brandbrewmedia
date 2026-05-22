@@ -11,10 +11,7 @@ export default function Hero() {
   useEffect(() => {
     intervalRef.current = setInterval(() => {
       setVisible(false)
-      setTimeout(() => {
-        setWordIdx(i => (i + 1) % WORDS.length)
-        setVisible(true)
-      }, 400)
+      setTimeout(() => { setWordIdx(i => (i + 1) % WORDS.length); setVisible(true) }, 400)
     }, 2500)
     return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
   }, [])
@@ -22,47 +19,43 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-brand-black"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-brand-off-white"
+      style={{ paddingTop: '80px' }}
     >
-      {/* Animated gradient blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-brand-red/20 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-brand-red/10 rounded-full blur-3xl animate-pulse-slow delay-300" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-red/5 rounded-full blur-3xl" />
-      </div>
-
-      {/* Grid lines */}
+      {/* Subtle grid pattern */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-10"
+        className="absolute inset-0 pointer-events-none opacity-[0.04]"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(181,52,26,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(181,52,26,0.3) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
+            'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)',
+          backgroundSize: '50px 50px',
         }}
       />
 
-      <div className="noise-overlay" />
+      {/* Red accent blobs */}
+      <div className="absolute top-20 right-10 w-72 h-72 bg-brand-red/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-20 left-10 w-56 h-56 bg-brand-red/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-6xl mx-auto">
+
         {/* Eyebrow */}
         <div className="inline-flex items-center gap-3 mb-8 opacity-0 animate-fade-in delay-100">
-          <span className="w-8 h-px bg-brand-red" />
-          <span className="font-montserrat text-xs font-semibold tracking-[0.4em] text-brand-red uppercase">
+          <span className="w-8 h-[2px] bg-brand-red" />
+          <span className="font-montserrat text-xs font-bold tracking-[0.45em] text-brand-red uppercase">
             Digital Marketing Agency
           </span>
-          <span className="w-8 h-px bg-brand-red" />
+          <span className="w-8 h-[2px] bg-brand-red" />
         </div>
 
         {/* Main headline */}
-        <h1 className="font-bebas text-[clamp(4rem,14vw,11rem)] leading-none text-white opacity-0 animate-fade-up delay-200 mb-2">
+        <h1 className="font-bebas text-[clamp(4rem,13vw,10rem)] leading-none text-black opacity-0 animate-fade-up delay-200 mb-2 tracking-wider">
           We Brew
         </h1>
 
-        {/* Animated word */}
-        <div className="font-bebas text-[clamp(4rem,14vw,11rem)] leading-none overflow-hidden mb-6">
+        {/* Animated cycling word */}
+        <div className="font-bebas text-[clamp(4rem,13vw,10rem)] leading-none overflow-hidden mb-4 tracking-wider">
           <span
-            className="inline-block text-gradient transition-all duration-400"
+            className="inline-block text-brand-red transition-all duration-400"
             style={{
               opacity: visible ? 1 : 0,
               transform: visible ? 'translateY(0)' : 'translateY(-20px)',
@@ -72,17 +65,23 @@ export default function Hero() {
           </span>
         </div>
 
-        {/* Tagline */}
-        <p className="font-montserrat text-lg md:text-xl text-gray-300 max-w-2xl mx-auto opacity-0 animate-fade-up delay-400 mb-12 leading-relaxed">
+        {/* Red underline accent on tagline */}
+        <div className="opacity-0 animate-fade-up delay-300 mb-6 flex justify-center">
+          <span className="red-underline font-montserrat text-sm font-bold tracking-[0.4em] text-brand-red uppercase pb-2">
+            We Brew Brands
+          </span>
+        </div>
+
+        {/* Subtitle */}
+        <p className="font-montserrat text-base md:text-lg text-brand-gray-600 max-w-2xl mx-auto opacity-0 animate-fade-up delay-400 mb-12 leading-relaxed">
           From strategy to execution — we craft digital experiences that ignite growth,
           build authority, and turn audiences into brand advocates.
         </p>
 
-        {/* CTA Buttons */}
+        {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 opacity-0 animate-fade-up delay-500">
-          <a href="#contact" className="btn-primary group relative overflow-hidden">
-            <span className="relative z-10">Start Your Journey</span>
-            <span className="absolute inset-0 bg-brand-red-light translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
+          <a href="#contact" className="btn-primary shadow-lg shadow-brand-red/20">
+            Start Your Journey
           </a>
           <a href="#portfolio" className="btn-outline">
             View Our Work
@@ -90,15 +89,15 @@ export default function Hero() {
         </div>
 
         {/* Stats */}
-        <div className="mt-20 grid grid-cols-3 gap-8 max-w-2xl mx-auto opacity-0 animate-fade-up delay-600">
+        <div className="mt-20 grid grid-cols-3 gap-8 max-w-xl mx-auto opacity-0 animate-fade-up delay-600">
           {[
             { num: '150+', label: 'Brands Brewed' },
             { num: '300%', label: 'Avg. Growth' },
-            { num: '5★', label: 'Client Rating' },
+            { num: '5★',   label: 'Client Rating' },
           ].map(s => (
             <div key={s.label} className="text-center">
               <div className="font-bebas text-4xl md:text-5xl text-brand-red">{s.num}</div>
-              <div className="font-montserrat text-xs text-gray-400 uppercase tracking-widest mt-1">
+              <div className="font-montserrat text-xs text-brand-gray-400 uppercase tracking-widest mt-1 font-semibold">
                 {s.label}
               </div>
             </div>
@@ -107,18 +106,16 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
-        <span className="font-montserrat text-xs tracking-widest text-gray-400 uppercase">Scroll</span>
-        <div className="w-px h-16 bg-gradient-to-b from-brand-red to-transparent animate-pulse" />
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        <span className="font-montserrat text-xs tracking-widest text-brand-gray-400 uppercase font-semibold">Scroll</span>
+        <div className="w-px h-12 bg-gradient-to-b from-brand-red to-transparent" />
       </div>
 
-      {/* Marquee brand name at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 overflow-hidden py-3 border-t border-white/5">
+      {/* Marquee */}
+      <div className="absolute bottom-0 left-0 right-0 overflow-hidden py-3 border-t border-black/5">
         <div className="flex animate-marquee whitespace-nowrap">
-          {Array(8).fill('BRAND BREW MEDIA · WE BREW BRANDS · ').map((t, i) => (
-            <span key={i} className="font-bebas text-sm text-white/10 tracking-widest mx-4">
-              {t}
-            </span>
+          {Array(10).fill('BRAND BREW MEDIA · WE BREW BRANDS · ').map((t, i) => (
+            <span key={i} className="font-bebas text-xs text-black/10 tracking-widest mx-4">{t}</span>
           ))}
         </div>
       </div>
