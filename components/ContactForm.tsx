@@ -70,7 +70,7 @@ export default function ContactForm() {
 
             {[
               { icon: Mail, label: 'Email Us', value: 'hello@brandbrew.in' },
-              { icon: Phone, label: 'Call Us', value: '+91 98765 43210' },
+              { icon: Phone, label: 'Call Us', value: '+91 93810 06485' },
               { icon: MapPin, label: 'Visit Us', value: 'Chennai, Tamil Nadu, India' },
             ].map(item => (
               <div key={item.label} className="flex items-start gap-4">
