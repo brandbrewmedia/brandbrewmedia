@@ -12,9 +12,9 @@ export default function Footer() {
               <Image
                 src="/logo.jpg"
                 alt="Brand Brew Media — We Brew Brands"
-                width={180}
-                height={68}
-                className="h-14 w-auto object-contain brightness-0 invert"
+                width={300}
+                height={110}
+                className="h-24 w-auto object-contain brightness-0 invert"
               />
             </div>
             <p className="font-montserrat text-sm text-gray-400 leading-relaxed max-w-sm">

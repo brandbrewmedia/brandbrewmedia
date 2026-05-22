@@ -27,8 +27,8 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-400 ${
         scrolled
-          ? 'bg-white/95 backdrop-blur-lg shadow-md py-3 border-b border-gray-100'
-          : 'bg-white/90 backdrop-blur-sm py-4'
+          ? 'bg-white/95 backdrop-blur-lg shadow-md py-2 border-b border-gray-100'
+          : 'bg-white/90 backdrop-blur-sm py-3'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
@@ -38,9 +38,9 @@ export default function Navbar() {
           <Image
             src="/logo.jpg"
             alt="Brand Brew Media — We Brew Brands"
-            width={160}
-            height={60}
-            className="h-12 w-auto object-contain"
+            width={280}
+            height={100}
+            className="h-16 sm:h-20 w-auto object-contain"
             priority
           />
         </Link>
