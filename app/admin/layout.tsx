@@ -9,14 +9,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname()
   const [checked, setChecked] = useState(false)
 
+  const isLoginPage = pathname === '/admin/login' || pathname === '/admin/login/'
+
   useEffect(() => {
-    if (pathname === '/admin/login') { setChecked(true); return }
+    if (isLoginPage) { setChecked(true); return }
     if (!auth.check()) {
       router.replace('/admin/login')
     } else {
       setChecked(true)
     }
-  }, [pathname, router])
+  }, [pathname, router, isLoginPage])
 
   if (!checked) {
     return (
@@ -26,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     )
   }
 
-  if (pathname === '/admin/login') return <>{children}</>
+  if (isLoginPage) return <>{children}</>
 
   return (
     <div className="min-h-screen bg-brand-black flex">
