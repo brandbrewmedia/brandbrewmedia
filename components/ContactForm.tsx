@@ -69,9 +69,9 @@ export default function ContactForm() {
             </div>
 
             {[
-              { icon: Mail, label: 'Email Us', value: 'hello@brandbrew.in' },
+              { icon: Mail, label: 'Email Us', value: 'brandbrewchennai@gmail.com' },
               { icon: Phone, label: 'Call Us', value: '+91 93810 06485' },
-              { icon: MapPin, label: 'Visit Us', value: 'Chennai, Tamil Nadu, India' },
+              { icon: MapPin, label: 'Visit Us', value: 'First Floor, Dharmambal Palanippan Complex, 1/2A, Mount Poonamallee Rd, near A2B Restaurant, Ramapuram, Nandambakkam, Chennai, Tamil Nadu 600089' },
             ].map(item => (
               <div key={item.label} className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-brand-red/10 flex items-center justify-center flex-shrink-0">
