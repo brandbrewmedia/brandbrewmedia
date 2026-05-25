@@ -38,9 +38,9 @@ export default function Navbar() {
           <Image
             src="/logo.png"
             alt="Brand Brew Media — We Brew Brands"
-            width={1400}
-            height={500}
-            className="h-[320px] sm:h-[400px] w-auto object-contain"
+            width={280}
+            height={100}
+            className="h-10 sm:h-12 w-auto object-contain"
             priority
           />
         </Link>
