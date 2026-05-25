@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { Play, X, Youtube } from 'lucide-react'
-import { media, type MediaItem } from '@/lib/storage'
+import type { MediaItem } from '@/lib/storage'
 
 const DEFAULT_VIDEOS: MediaItem[] = [
   { id: 'dv1', type: 'youtube', name: 'How to Build a Brand in 2024',     youtubeId: 'XPJJcEpCpxc', url: 'https://www.youtube.com/watch?v=XPJJcEpCpxc', category: 'Branding',     uploadedAt: '' },
@@ -22,8 +22,12 @@ export default function VideoGallery() {
   const [filter, setFilter] = useState('All')
 
   useEffect(() => {
-    const admin = media.list().filter(m => m.type === 'youtube' || m.type === 'video')
-    setVideos(admin.length > 0 ? [...admin, ...DEFAULT_VIDEOS] : DEFAULT_VIDEOS)
+    fetch('/api/videos')
+      .then(r => r.ok ? r.json() : [])
+      .then((uploaded: MediaItem[]) => {
+        setVideos(uploaded.length > 0 ? uploaded : DEFAULT_VIDEOS)
+      })
+      .catch(() => setVideos(DEFAULT_VIDEOS))
   }, [])
 
   const categories = ['All', ...Array.from(new Set(videos.map(v => v.category)))]
