@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { upload } from '@vercel/blob/client'
 import { Upload, Trash2, X, Film, Youtube, Image, Plus, CheckCircle, Loader, AlertCircle } from 'lucide-react'
 
 const VIDEO_CATS = ['Brand Work', 'Social Media', 'Video Production', 'Events', 'Behind the Scenes', 'Other']
@@ -65,7 +66,7 @@ export default function MediaPage() {
   const showSuccess = (msg: string) => { setSuccess(msg); setError(''); setTimeout(() => setSuccess(''), 4000) }
   const showError   = (msg: string) => { setError(msg);   setSuccess('') }
 
-  // ── Video upload ──
+  // ── Video upload (client-side, no size limit) ──
   const handleVideoUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return
     setUploading(true); setError('')
@@ -73,16 +74,16 @@ export default function MediaPage() {
     for (const file of Array.from(files)) {
       if (!file.type.startsWith('video/')) { showError(`"${file.name}" is not a video`); continue }
       try {
-        setProgress(`Uploading ${file.name}…`)
-        const form = new FormData()
-        form.append('file', file); form.append('folder', 'videos')
-        const r = await fetch('/api/upload', { method: 'POST', body: form })
-        if (!r.ok) throw new Error(await r.text())
-        const { url } = await r.json()
+        setProgress(`Uploading ${file.name} — 0%`)
+        const blob = await upload(`videos/${Date.now()}-${file.name}`, file, {
+          access: 'public',
+          handleUploadUrl: '/api/upload',
+          onUploadProgress: ({ percentage }) => setProgress(`Uploading ${file.name} — ${percentage}%`),
+        })
         await fetch('/api/videos', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'upload', name: videoName.trim() || file.name, url, category: videoCat }),
+          body: JSON.stringify({ type: 'upload', name: videoName.trim() || file.name, url: blob.url, category: videoCat }),
         })
         uploaded++; setVideoName('')
       } catch (e: unknown) { showError(`Failed: ${e instanceof Error ? e.message : 'Unknown error'}`) }
@@ -110,7 +111,7 @@ export default function MediaPage() {
     await loadVideos(); showSuccess('Deleted.')
   }
 
-  // ── Photo upload ──
+  // ── Photo upload (client-side, no size limit) ──
   const handlePhotoUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return
     setUploading(true); setError('')
@@ -118,18 +119,18 @@ export default function MediaPage() {
     for (const file of Array.from(files)) {
       if (!file.type.startsWith('image/')) { showError(`"${file.name}" is not an image`); continue }
       try {
-        setProgress(`Uploading ${file.name}…`)
-        const form = new FormData()
-        form.append('file', file); form.append('folder', 'photos')
-        const r = await fetch('/api/upload', { method: 'POST', body: form })
-        if (!r.ok) throw new Error(await r.text())
-        const { url } = await r.json()
+        setProgress(`Uploading ${file.name} — 0%`)
+        const blob = await upload(`photos/${Date.now()}-${file.name}`, file, {
+          access: 'public',
+          handleUploadUrl: '/api/upload',
+          onUploadProgress: ({ percentage }) => setProgress(`Uploading ${file.name} — ${percentage}%`),
+        })
         await fetch('/api/photos', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             name: photoName.trim() || file.name,
-            url, category: photoCat,
+            url: blob.url, category: photoCat,
             tag: photoTag.trim() || photoCat,
             client: photoClient.trim(),
             desc: photoDesc.trim(),
