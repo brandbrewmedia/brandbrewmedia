@@ -8,9 +8,13 @@ export async function POST(request: Request): Promise<NextResponse> {
     const jsonResponse = await handleUpload({
       body,
       request,
-      onBeforeGenerateToken: async (pathname) => ({
-        allowedContentTypes: ['video/*', 'image/*'],
-        pathname,
+      onBeforeGenerateToken: async () => ({
+        allowedContentTypes: [
+          'video/mp4', 'video/quicktime', 'video/webm', 'video/x-msvideo',
+          'video/x-matroska', 'video/3gpp', 'video/ogg',
+          'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif',
+        ],
+        maximumSizeInBytes: 2 * 1024 * 1024 * 1024, // 2GB
       }),
       onUploadCompleted: async () => {},
     })
