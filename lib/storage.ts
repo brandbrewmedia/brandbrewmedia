@@ -157,20 +157,8 @@ export const media = {
 
 // ---- Reviews ----
 const RV_KEY = 'bbm_reviews'
-const defaultReviews: Review[] = [
-  { id: uid(), author: 'Priya Sharma', company: 'TechVista Solutions', rating: 5, text: 'Brand Brew Media completely transformed our online presence. Our lead generation increased by 300% in just 3 months!', date: new Date().toISOString(), featured: true, visible: true },
-  { id: uid(), author: 'Rahul Menon', company: 'CloudNine Retail', rating: 5, text: 'Exceptional creativity and results. Their social media strategy brought us 50k new followers and massive brand awareness.', date: new Date().toISOString(), featured: true, visible: true },
-  { id: uid(), author: 'Ananya Krishnan', company: 'Spice Route Foods', rating: 5, text: 'The team at Brand Brew truly understands branding. They crafted a visual identity that perfectly captures our essence.', date: new Date().toISOString(), featured: true, visible: true },
-]
 export const reviews = {
-  list: (): Review[] => {
-    const stored = get<Review[]>(RV_KEY, [])
-    if (stored.length === 0) {
-      set(RV_KEY, defaultReviews)
-      return defaultReviews
-    }
-    return stored
-  },
+  list: (): Review[] => get<Review[]>(RV_KEY, []),
   add: (data: Omit<Review, 'id' | 'date'>): Review => {
     const item: Review = { ...data, id: uid(), date: new Date().toISOString() }
     set(RV_KEY, [...reviews.list(), item])

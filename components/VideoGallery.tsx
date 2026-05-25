@@ -3,14 +3,6 @@ import { useState, useEffect } from 'react'
 import { Play, X, Youtube } from 'lucide-react'
 import type { MediaItem } from '@/lib/storage'
 
-const DEFAULT_VIDEOS: MediaItem[] = [
-  { id: 'dv1', type: 'youtube', name: 'How to Build a Brand in 2024',     youtubeId: 'XPJJcEpCpxc', url: 'https://www.youtube.com/watch?v=XPJJcEpCpxc', category: 'Branding',     uploadedAt: '' },
-  { id: 'dv2', type: 'youtube', name: 'Social Media Marketing Strategy',  youtubeId: 'q9gGBHFkCNQ', url: 'https://www.youtube.com/watch?v=q9gGBHFkCNQ', category: 'Social Media', uploadedAt: '' },
-  { id: 'dv3', type: 'youtube', name: 'SEO Tips That Actually Work',       youtubeId: 'YB8ZRHNoYVE', url: 'https://www.youtube.com/watch?v=YB8ZRHNoYVE', category: 'SEO',          uploadedAt: '' },
-  { id: 'dv4', type: 'youtube', name: 'Content Marketing Masterclass',    youtubeId: 'Z3KDNx8ZX1o', url: 'https://www.youtube.com/watch?v=Z3KDNx8ZX1o', category: 'Content',      uploadedAt: '' },
-  { id: 'dv5', type: 'youtube', name: 'Performance Ads That Convert',     youtubeId: 'jMwjfXWrNF0', url: 'https://www.youtube.com/watch?v=jMwjfXWrNF0', category: 'Ads',          uploadedAt: '' },
-  { id: 'dv6', type: 'youtube', name: 'Video Marketing for Brands',       youtubeId: 'GV3FMdMqFiA', url: 'https://www.youtube.com/watch?v=GV3FMdMqFiA', category: 'Video',        uploadedAt: '' },
-]
 
 function getYoutubeId(url: string) {
   return url.match(/(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/)?.[1] ?? ''
@@ -24,10 +16,8 @@ export default function VideoGallery() {
   useEffect(() => {
     fetch('/api/videos')
       .then(r => r.ok ? r.json() : [])
-      .then((uploaded: MediaItem[]) => {
-        setVideos(uploaded.length > 0 ? uploaded : DEFAULT_VIDEOS)
-      })
-      .catch(() => setVideos(DEFAULT_VIDEOS))
+      .then((uploaded: MediaItem[]) => setVideos(uploaded))
+      .catch(() => {})
   }, [])
 
   const categories = ['All', ...Array.from(new Set(videos.map(v => v.category)))]

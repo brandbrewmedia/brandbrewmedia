@@ -13,70 +13,7 @@ type PortfolioItem = {
   client: string
 }
 
-const PORTFOLIO: PortfolioItem[] = [
-  {
-    id: 1,
-    title: 'TechVista Rebrand',
-    category: 'Branding',
-    tag: 'Branding',
-    client: 'TechVista Solutions',
-    desc: 'Complete brand identity overhaul for a B2B SaaS company — logo, guidelines, website, and launch campaign.',
-    result: '+240% brand recognition',
-    image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&q=80',
-  },
-  {
-    id: 2,
-    title: 'CloudNine Social Campaign',
-    category: 'Social Media',
-    tag: 'SMM',
-    client: 'CloudNine Retail',
-    desc: 'Six-month integrated social media strategy across Instagram, Facebook and LinkedIn for a D2C fashion brand.',
-    result: '50K new followers · 3x ROAS',
-    image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&q=80',
-  },
-  {
-    id: 3,
-    title: 'Spice Route SEO',
-    category: 'SEO',
-    tag: 'SEO',
-    client: 'Spice Route Foods',
-    desc: 'Comprehensive SEO overhaul ranking 120+ keywords on page 1, driving 4x organic traffic in 6 months.',
-    result: '400% organic traffic growth',
-    image: 'https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=800&q=80',
-  },
-  {
-    id: 4,
-    title: 'Stellar Homes PPC',
-    category: 'Performance',
-    tag: 'PPC',
-    client: 'Stellar Homes',
-    desc: 'Google & Meta ad campaigns for a real estate developer generating high-quality leads at record-low CPL.',
-    result: '₹12 CPL · 8x ROAS',
-    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80',
-  },
-  {
-    id: 5,
-    title: 'FreshBite Brand Film',
-    category: 'Video',
-    tag: 'Video',
-    client: 'FreshBite',
-    desc: '3-minute brand film production for a healthy food brand — conceptualisation, shoot, and full post-production.',
-    result: '2M views in 30 days',
-    image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&q=80',
-  },
-  {
-    id: 6,
-    title: 'EduEdge Content Strategy',
-    category: 'Content',
-    tag: 'Content',
-    client: 'EduEdge',
-    desc: 'Full content strategy, blog production, and thought leadership pieces positioning the brand as an authority.',
-    result: '180% increase in leads',
-    image: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&q=80',
-  },
-]
-
-const CATEGORIES = ['All', 'Branding', 'Social Media', 'SEO', 'Performance', 'Video', 'Content']
+const PORTFOLIO: PortfolioItem[] = []
 
 function PortfolioCard({ item, idx }: { item: PortfolioItem; idx: number }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -182,14 +119,12 @@ export default function Portfolio() {
     fetch('/api/photos')
       .then(r => r.ok ? r.json() : [])
       .then((uploaded: { id: string; name: string; category: string; tag: string; client: string; desc: string; result: string; url: string }[]) => {
-        if (uploaded.length > 0) {
-          const mapped: PortfolioItem[] = uploaded.map(p => ({
-            id: p.id, title: p.name, category: p.category,
-            tag: p.tag || p.category, client: p.client || '',
-            desc: p.desc || '', result: p.result || '', image: p.url,
-          }))
-          setAllItems([...mapped, ...PORTFOLIO])
-        }
+        const mapped: PortfolioItem[] = uploaded.map(p => ({
+          id: p.id, title: p.name, category: p.category,
+          tag: p.tag || p.category, client: p.client || '',
+          desc: p.desc || '', result: p.result || '', image: p.url,
+        }))
+        setAllItems(mapped)
       })
       .catch(() => {})
   }, [])
@@ -234,29 +169,33 @@ export default function Portfolio() {
           </p>
         </div>
 
-        {/* Filter tabs */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setActive(cat)}
-              className={`font-montserrat text-xs font-semibold px-5 py-2 uppercase tracking-widest
-                          transition-all duration-200 border
-                          ${active === cat
-                            ? 'bg-brand-red text-white border-brand-red'
-                            : 'text-brand-gray-600 border-brand-gray-200 hover:border-brand-red hover:text-brand-red bg-white'
-                          }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+        {allItems.length > 0 && (
+          <>
+            {/* Filter tabs */}
+            <div className="flex flex-wrap justify-center gap-3 mb-12">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setActive(cat)}
+                  className={`font-montserrat text-xs font-semibold px-5 py-2 uppercase tracking-widest
+                              transition-all duration-200 border
+                              ${active === cat
+                                ? 'bg-brand-red text-white border-brand-red'
+                                : 'text-brand-gray-600 border-brand-gray-200 hover:border-brand-red hover:text-brand-red bg-white'
+                              }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((item, i) => (
-            <PortfolioCard key={item.id} item={item} idx={i} />
-          ))}
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filtered.map((item, i) => (
+                <PortfolioCard key={item.id} item={item} idx={i} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </section>
   )
