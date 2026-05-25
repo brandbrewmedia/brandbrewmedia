@@ -217,6 +217,23 @@ export default function Portfolio() {
           </p>
         </div>
 
+        {/* ── Canva Presentation ── */}
+        <div className="mb-16">
+          <div className="relative w-full rounded-sm overflow-hidden shadow-lg border border-brand-gray-200"
+               style={{ paddingTop: '56.25%' }}>
+            <iframe
+              loading="lazy"
+              className="absolute inset-0 w-full h-full border-0"
+              src="https://www.canva.com/design/DAG4951C_rU/U0_FB6AWzPcWo795T2TWMQ/view?embed"
+              allow="fullscreen"
+              allowFullScreen
+            />
+          </div>
+          <p className="text-center font-montserrat text-xs text-brand-gray-400 mt-3 tracking-widest uppercase">
+            Our Brand Deck — powered by Canva
+          </p>
+        </div>
+
         {/* Filter tabs */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           {categories.map(cat => (
