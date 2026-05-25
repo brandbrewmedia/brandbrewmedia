@@ -40,7 +40,7 @@ export default function Navbar() {
             alt="Brand Brew Media — We Brew Brands"
             width={280}
             height={100}
-            className="h-10 sm:h-12 w-auto object-contain"
+            className="h-[120px] sm:h-[144px] w-auto object-contain"
             priority
           />
         </Link>
