@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import { ExternalLink, X } from 'lucide-react'
 
 type PortfolioItem = {
-  id: number
+  id: number | string
   title: string
   category: string
   desc: string
@@ -176,8 +176,26 @@ function PortfolioCard({ item, idx }: { item: PortfolioItem; idx: number }) {
 
 export default function Portfolio() {
   const [active, setActive] = useState('All')
-  const filtered =
-    active === 'All' ? PORTFOLIO : PORTFOLIO.filter(p => p.category === active)
+  const [allItems, setAllItems] = useState<PortfolioItem[]>(PORTFOLIO)
+
+  useEffect(() => {
+    fetch('/api/photos')
+      .then(r => r.ok ? r.json() : [])
+      .then((uploaded: { id: string; name: string; category: string; tag: string; client: string; desc: string; result: string; url: string }[]) => {
+        if (uploaded.length > 0) {
+          const mapped: PortfolioItem[] = uploaded.map(p => ({
+            id: p.id, title: p.name, category: p.category,
+            tag: p.tag || p.category, client: p.client || '',
+            desc: p.desc || '', result: p.result || '', image: p.url,
+          }))
+          setAllItems([...mapped, ...PORTFOLIO])
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const categories = ['All', ...Array.from(new Set(allItems.map(p => p.category)))]
+  const filtered = active === 'All' ? allItems : allItems.filter(p => p.category === active)
 
   return (
     <section id="portfolio" className="py-28 bg-brand-off-white relative overflow-hidden">
@@ -201,7 +219,7 @@ export default function Portfolio() {
 
         {/* Filter tabs */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {CATEGORIES.map(cat => (
+          {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setActive(cat)}
