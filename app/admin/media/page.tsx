@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { upload } from '@vercel/blob/client'
+// @vercel/blob/client removed — using direct streaming upload
 import { Upload, Trash2, X, Film, Youtube, Image, Plus, CheckCircle, Loader, AlertCircle } from 'lucide-react'
 
 const VIDEO_CATS = ['Brand Work', 'Social Media', 'Video Production', 'Events', 'Behind the Scenes', 'Other']
@@ -74,16 +74,18 @@ export default function MediaPage() {
     for (const file of Array.from(files)) {
       if (!file.type.startsWith('video/')) { showError(`"${file.name}" is not a video`); continue }
       try {
-        setProgress(`Uploading ${file.name} — 0%`)
-        const blob = await upload(`videos/${Date.now()}-${file.name}`, file, {
-          access: 'public',
-          handleUploadUrl: '/api/upload',
-          onUploadProgress: ({ percentage }) => setProgress(`Uploading ${file.name} — ${percentage}%`),
+        setProgress(`Uploading ${file.name}…`)
+        const r = await fetch(`/api/upload?filename=videos/${Date.now()}-${encodeURIComponent(file.name)}`, {
+          method: 'POST',
+          body: file,
+          headers: { 'x-content-type': file.type },
         })
+        if (!r.ok) throw new Error(await r.text())
+        const { url } = await r.json()
         await fetch('/api/videos', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'upload', name: videoName.trim() || file.name, url: blob.url, category: videoCat }),
+          body: JSON.stringify({ type: 'upload', name: videoName.trim() || file.name, url, category: videoCat }),
         })
         uploaded++; setVideoName('')
       } catch (e: unknown) { showError(`Failed: ${e instanceof Error ? e.message : 'Unknown error'}`) }
@@ -119,18 +121,20 @@ export default function MediaPage() {
     for (const file of Array.from(files)) {
       if (!file.type.startsWith('image/')) { showError(`"${file.name}" is not an image`); continue }
       try {
-        setProgress(`Uploading ${file.name} — 0%`)
-        const blob = await upload(`photos/${Date.now()}-${file.name}`, file, {
-          access: 'public',
-          handleUploadUrl: '/api/upload',
-          onUploadProgress: ({ percentage }) => setProgress(`Uploading ${file.name} — ${percentage}%`),
+        setProgress(`Uploading ${file.name}…`)
+        const r = await fetch(`/api/upload?filename=photos/${Date.now()}-${encodeURIComponent(file.name)}`, {
+          method: 'POST',
+          body: file,
+          headers: { 'x-content-type': file.type },
         })
+        if (!r.ok) throw new Error(await r.text())
+        const { url } = await r.json()
         await fetch('/api/photos', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             name: photoName.trim() || file.name,
-            url: blob.url, category: photoCat,
+            url, category: photoCat,
             tag: photoTag.trim() || photoCat,
             client: photoClient.trim(),
             desc: photoDesc.trim(),
