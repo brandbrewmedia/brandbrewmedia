@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
-// @vercel/blob/client removed — using direct streaming upload
+// uploads use presigned URLs — browser sends directly to Vercel Blob
 import { Upload, Trash2, X, Film, Youtube, Image, Plus, CheckCircle, Loader, AlertCircle } from 'lucide-react'
 
 const VIDEO_CATS = ['Brand Work', 'Social Media', 'Video Production', 'Events', 'Behind the Scenes', 'Other']
@@ -75,13 +75,13 @@ export default function MediaPage() {
       if (!file.type.startsWith('video/')) { showError(`"${file.name}" is not a video`); continue }
       try {
         setProgress(`Uploading ${file.name}…`)
-        const r = await fetch(`/api/upload?filename=videos/${Date.now()}-${encodeURIComponent(file.name)}`, {
-          method: 'POST',
-          body: file,
-          headers: { 'x-content-type': file.type },
-        })
-        if (!r.ok) throw new Error(await r.text())
-        const { url } = await r.json()
+        const tokenRes = await fetch(`/api/upload?filename=videos/${Date.now()}-${encodeURIComponent(file.name)}&contentType=${encodeURIComponent(file.type)}`)
+        if (!tokenRes.ok) throw new Error(await tokenRes.text())
+        const { presignedUrl } = await tokenRes.json()
+        const putRes = await fetch(presignedUrl, { method: 'PUT', body: file, headers: { 'content-type': file.type } })
+        if (!putRes.ok) throw new Error('Upload to storage failed')
+        const putData = await putRes.json().catch(() => ({}))
+        const url = putData.url ?? presignedUrl.split('?')[0]
         await fetch('/api/videos', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -122,13 +122,13 @@ export default function MediaPage() {
       if (!file.type.startsWith('image/')) { showError(`"${file.name}" is not an image`); continue }
       try {
         setProgress(`Uploading ${file.name}…`)
-        const r = await fetch(`/api/upload?filename=photos/${Date.now()}-${encodeURIComponent(file.name)}`, {
-          method: 'POST',
-          body: file,
-          headers: { 'x-content-type': file.type },
-        })
-        if (!r.ok) throw new Error(await r.text())
-        const { url } = await r.json()
+        const tokenRes = await fetch(`/api/upload?filename=photos/${Date.now()}-${encodeURIComponent(file.name)}&contentType=${encodeURIComponent(file.type)}`)
+        if (!tokenRes.ok) throw new Error(await tokenRes.text())
+        const { presignedUrl } = await tokenRes.json()
+        const putRes = await fetch(presignedUrl, { method: 'PUT', body: file, headers: { 'content-type': file.type } })
+        if (!putRes.ok) throw new Error('Upload to storage failed')
+        const putData = await putRes.json().catch(() => ({}))
+        const url = putData.url ?? presignedUrl.split('?')[0]
         await fetch('/api/photos', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

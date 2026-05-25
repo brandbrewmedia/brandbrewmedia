@@ -1,24 +1,24 @@
-import { put } from '@vercel/blob'
+import { issueSignedToken, presignUrl } from '@vercel/blob'
 import { NextResponse } from 'next/server'
 
-export const runtime = 'edge'
+// Returns a presigned PUT URL — the browser uploads directly to Vercel Blob (no size limit)
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const filename = searchParams.get('filename') ?? `upload-${Date.now()}`
+  const contentType = searchParams.get('contentType') ?? 'application/octet-stream'
 
-export async function POST(request: Request): Promise<NextResponse> {
-  try {
-    const { searchParams } = new URL(request.url)
-    const filename = searchParams.get('filename') ?? `upload-${Date.now()}`
+  const signedToken = await issueSignedToken({
+    operations: ['put'],
+    pathname: filename,
+    allowedContentTypes: [contentType],
+    maximumSizeInBytes: 2 * 1024 * 1024 * 1024,
+  })
 
-    const blob = await put(filename, request.body!, {
-      access: 'public',
-      multipart: true,
-    })
+  const { presignedUrl } = await presignUrl(signedToken, {
+    operation: 'put',
+    pathname: filename,
+    access: 'public',
+  })
 
-    return NextResponse.json({ url: blob.url })
-  } catch (error) {
-    console.error('Upload error:', error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Upload failed' },
-      { status: 500 }
-    )
-  }
+  return NextResponse.json({ presignedUrl })
 }
