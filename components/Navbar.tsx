@@ -36,7 +36,7 @@ export default function Navbar() {
         {/* ── Logo ── */}
         <Link href="#hero" className="flex-shrink-0">
           <Image
-            src="/logo.jpg"
+            src="/logo.png"
             alt="Brand Brew Media — We Brew Brands"
             width={1400}
             height={500}

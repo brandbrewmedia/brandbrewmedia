@@ -10,7 +10,7 @@ export default function Footer() {
             {/* Logo in footer — inverted to show on dark background */}
             <div className="mb-5">
               <Image
-                src="/logo.jpg"
+                src="/logo.png"
                 alt="Brand Brew Media — We Brew Brands"
                 width={300}
                 height={110}
