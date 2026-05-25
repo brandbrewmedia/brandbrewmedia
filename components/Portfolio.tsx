@@ -9,7 +9,7 @@ type PortfolioItem = {
   desc: string
   result: string
   tag: string
-  image: string        // URL — picsum for demo, replace with your real images
+  image: string
   client: string
 }
 
@@ -98,9 +98,8 @@ function PortfolioCard({ item, idx }: { item: PortfolioItem; idx: number }) {
         ref={ref}
         style={{ transitionDelay: `${idx * 80}ms` }}
         onClick={() => setModal(true)}
-        className={`group relative overflow-hidden bg-brand-gray-dark border border-white/5
-                    hover:border-brand-red/40 transition-all duration-500 cursor-pointer
-                    ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        className={`group card-white overflow-hidden cursor-pointer
+                    ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} transition-all duration-500`}
       >
         {/* Image */}
         <div className="relative h-56 overflow-hidden">
@@ -109,26 +108,23 @@ function PortfolioCard({ item, idx }: { item: PortfolioItem; idx: number }) {
             alt={item.title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
-          {/* Dark overlay */}
-          <div className="absolute inset-0 bg-brand-black/50 group-hover:bg-brand-black/30 transition-colors duration-500" />
-          {/* Tag */}
-          <span className="absolute top-4 left-4 font-bebas text-xs tracking-widest text-white bg-brand-red px-3 py-1">
+          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-500" />
+          <span className="absolute top-4 left-4 font-montserrat text-xs font-bold tracking-widest text-white bg-brand-red px-3 py-1 uppercase">
             {item.tag}
           </span>
-          {/* Expand icon */}
-          <div className="absolute top-4 right-4 w-8 h-8 bg-white/10 backdrop-blur-sm flex items-center justify-center
+          <div className="absolute top-4 right-4 w-8 h-8 bg-white/80 flex items-center justify-center
                           opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <ExternalLink size={14} className="text-white" />
+            <ExternalLink size={14} className="text-brand-red" />
           </div>
         </div>
 
         {/* Content */}
         <div className="p-6">
-          <div className="font-montserrat text-xs text-gray-500 mb-1">{item.client}</div>
-          <h3 className="font-bebas text-2xl text-white tracking-wide mb-2 group-hover:text-brand-red transition-colors duration-300">
+          <div className="font-montserrat text-xs text-brand-gray-400 uppercase tracking-widest mb-1">{item.client}</div>
+          <h3 className="font-bebas text-2xl text-black tracking-wide mb-2 group-hover:text-brand-red transition-colors duration-300">
             {item.title}
           </h3>
-          <p className="font-montserrat text-sm text-gray-400 leading-relaxed line-clamp-2">{item.desc}</p>
+          <p className="font-montserrat text-sm text-brand-gray-600 leading-relaxed line-clamp-2">{item.desc}</p>
           <div className="flex items-center gap-2 mt-4">
             <span className="w-4 h-px bg-brand-red" />
             <span className="font-montserrat text-xs font-semibold text-brand-red uppercase tracking-widest">
@@ -141,30 +137,30 @@ function PortfolioCard({ item, idx }: { item: PortfolioItem; idx: number }) {
       {/* Lightbox Modal */}
       {modal && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setModal(false)}
         >
           <div
-            className="bg-brand-gray-dark border border-white/10 max-w-2xl w-full overflow-hidden"
+            className="bg-white border border-brand-gray-200 shadow-xl max-w-2xl w-full overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             <div className="relative h-72">
               <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
               <button
                 onClick={() => setModal(false)}
-                className="absolute top-4 right-4 w-10 h-10 bg-brand-black/70 text-white flex items-center justify-center hover:bg-brand-red transition-colors"
+                className="absolute top-4 right-4 w-10 h-10 bg-white text-black flex items-center justify-center hover:bg-brand-red hover:text-white transition-colors"
               >
                 <X size={18} />
               </button>
-              <span className="absolute bottom-4 left-4 font-bebas text-xs tracking-widest text-white bg-brand-red px-3 py-1">
+              <span className="absolute bottom-4 left-4 font-montserrat text-xs font-bold tracking-widest text-white bg-brand-red px-3 py-1 uppercase">
                 {item.tag}
               </span>
             </div>
             <div className="p-8">
-              <div className="font-montserrat text-xs text-gray-500 uppercase tracking-widest mb-1">{item.client}</div>
-              <h3 className="font-bebas text-4xl text-white tracking-wide mb-4">{item.title}</h3>
-              <p className="font-montserrat text-sm text-gray-300 leading-relaxed mb-6">{item.desc}</p>
-              <div className="flex items-center gap-3 p-4 bg-brand-red/10 border border-brand-red/20">
+              <div className="font-montserrat text-xs text-brand-gray-400 uppercase tracking-widest mb-1">{item.client}</div>
+              <h3 className="font-bebas text-4xl text-black tracking-wide mb-4">{item.title}</h3>
+              <p className="font-montserrat text-sm text-brand-gray-600 leading-relaxed mb-6">{item.desc}</p>
+              <div className="flex items-center gap-3 p-4 bg-brand-red/5 border border-brand-red/20">
                 <span className="w-6 h-px bg-brand-red flex-shrink-0" />
                 <span className="font-montserrat text-sm font-semibold text-brand-red uppercase tracking-widest">
                   Result: {item.result}
@@ -184,18 +180,21 @@ export default function Portfolio() {
     active === 'All' ? PORTFOLIO : PORTFOLIO.filter(p => p.category === active)
 
   return (
-    <section id="portfolio" className="py-28 bg-brand-gray-dark relative">
+    <section id="portfolio" className="py-28 bg-brand-off-white relative overflow-hidden">
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-brand-red/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="font-montserrat text-xs font-semibold tracking-[0.4em] text-brand-red uppercase block mb-4">
+          <span className="font-montserrat text-xs font-bold tracking-[0.4em] text-brand-red uppercase block mb-4">
             Our Work
           </span>
-          <h2 className="section-title mb-6">
+          <h2 className="section-title mb-4">
             Results We&apos;ve <span className="text-brand-red">Brewed</span>
           </h2>
-          <p className="font-montserrat text-gray-400 text-lg max-w-2xl mx-auto">
+          <div className="flex justify-center mb-6">
+            <span className="w-16 h-[3px] bg-brand-red" />
+          </div>
+          <p className="font-montserrat text-brand-gray-600 text-lg max-w-2xl mx-auto">
             Real campaigns. Real results. A snapshot of the brands we&apos;ve helped grow.
           </p>
         </div>
@@ -210,7 +209,7 @@ export default function Portfolio() {
                           transition-all duration-200 border
                           ${active === cat
                             ? 'bg-brand-red text-white border-brand-red'
-                            : 'text-gray-400 border-white/10 hover:border-brand-red hover:text-brand-red'
+                            : 'text-brand-gray-600 border-brand-gray-200 hover:border-brand-red hover:text-brand-red bg-white'
                           }`}
             >
               {cat}
@@ -223,12 +222,6 @@ export default function Portfolio() {
             <PortfolioCard key={item.id} item={item} idx={i} />
           ))}
         </div>
-
-        {/* How to replace images note — remove this in production */}
-        <p className="text-center font-montserrat text-xs text-gray-600 mt-12">
-          To use your own images, replace the image URLs in{' '}
-          <code className="text-brand-red">components/Portfolio.tsx</code>
-        </p>
       </div>
     </section>
   )
